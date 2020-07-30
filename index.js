@@ -1,8 +1,17 @@
 const express = require('express');
+const handlebars = require('express-handlebars');
 const sqlite3 = require('sqlite3');
 const Twit = require('twit');
 
 const app = express();
+
+//CONFIGURANDO A APLICAÇÃO PARA UTILIZAR O HANDLEBARS COMO ENGINE DE LAYOUTS
+app.set('view engine', 'handlebars');
+app.engine('handlebars', handlebars({
+    layoutsDir: __dirname + '/views/layouts',
+}));
+//COMANDO PARA PERMITIR A UTILIZAÇÃO ARQUIVOS ESTÁTICOS
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 
 //CONEXÃO COM O BANCO DE DADOS
 let db = new sqlite3.Database('./db/moderadortweets.db');
@@ -39,7 +48,17 @@ stream.on('tweet', function (tweet) {
 
 //HOME DA APLICAÇÃO
 app.get('/', function (req, res) {
-    res.send('Olá, moderador!');
+    res.render('home', {layout : 'principal'});
+});
+
+//TELA DE MODERAÇÃO DE TWEETS
+app.get('/moderacao', function (req, res) {
+    res.render('moderacao', {layout : 'principal'});
+});
+
+//TELA DE EXIBIÇÃO DE TWEETS MODERADOS
+app.get('/exibicao', function (req, res) {
+    res.render('exibicao', {layout : 'principal'});
 });
 
 app.listen(3000, function () {
