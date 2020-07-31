@@ -39,9 +39,11 @@ app.get('/', function (req, res) {
 //TELA DE MODERAÇÃO DE TWEETS
 app.get('/moderacao', function (req, res) {
     nm_hashtag = req.query.hashtag;
-    console.log(nm_hashtag);
 
-    console.log('---------- INICIANDO COLETA DE TWEETS ----------');
+    console.log('---------- INICIANDO COLETA DE TWEETS COM HASHTAG ' + nm_hashtag + '----------');
+    if(stream != null)
+        stream.stop();
+    
     stream = T.stream('statuses/filter', { track: nm_hashtag });
 
     stream.on('tweet', function (tweet) {
