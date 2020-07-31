@@ -1,8 +1,8 @@
-<form>
+<form action="/moderacao" method="GET">
   <div class="form-group w-50">
     <div>
-        <label for="exampleInputEmail1">Digite uma hashtag para iniciar coleta e moderação de tweets.</label>
-        <input type="email" class="form-control" id="exampleInputEmail1">
+        <label for="inputHashtag">Digite uma hashtag para iniciar coleta e moderação de tweets.</label>
+        <input type="text" class="form-control" id="hashtag" name="hashtag" value="{{post.hashtag}}">
     </div>
   </div>
   <button type="submit" class="btn btn-primary">Enviar</button>

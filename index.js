@@ -18,7 +18,7 @@ let db = new sqlite3.Database('./db/moderadortweets.db');
 console.log('Conexão com o banco de dados aberta');
 
 //HASHTAG CUJOS TWEETS SERÃO COLETADOS
-var nm_hashtag = '#love';
+var nm_hashtag = '';
 
 //VARIÁVEL PARA STREAM DE DADOS DO TWITTER
 var stream;
@@ -31,29 +31,31 @@ const T = new Twit({
     access_token_secret: 'qB0WPGNqLXB1lDzhXFyW6LNrneDMd4ZgaNyQMaYwl9p8v',
 });
 
-console.log('---------- INICIANDO COLETA DE TWEETS ----------');
-stream = T.stream('statuses/filter', { track: nm_hashtag });
-
-//INSERINDO OS TWEETS COLETADOS NO BANCO DE DADOS
-stream.on('tweet', function (tweet) {
-    console.log(tweet.text);
-
-    //INSERINDO OS TWEETS NO BANCO DE DADOS
-    db.run(`INSERT INTO tweets(nm_screen_name, nm_url_imagem, tx_mensagem, nm_status) VALUES(?, ?, ?, ?)`, [tweet.user.screen_name, tweet.user.profile_image_url, tweet.text, 'Em moderação'], function(err) {
-        if (err) {
-            return console.log(err.message);
-        }
-    });
-});
-
 //HOME DA APLICAÇÃO
 app.get('/', function (req, res) {
-    res.render('home', {layout : 'principal'});
+    res.render('home', {layout : 'principal', post: {hashtag: nm_hashtag}});
 });
 
 //TELA DE MODERAÇÃO DE TWEETS
 app.get('/moderacao', function (req, res) {
-    res.render('moderacao', {layout : 'principal'});
+    nm_hashtag = req.query.hashtag;
+    console.log(nm_hashtag);
+
+    console.log('---------- INICIANDO COLETA DE TWEETS ----------');
+    stream = T.stream('statuses/filter', { track: nm_hashtag });
+
+    stream.on('tweet', function (tweet) {
+        console.log(tweet.text);
+
+        //INSERINDO OS TWEETS NO BANCO DE DADOS
+        db.run(`INSERT INTO tweets(nm_screen_name, nm_url_imagem, tx_mensagem, nm_status) VALUES(?, ?, ?, ?)`, [tweet.user.screen_name, tweet.user.profile_image_url, tweet.text, 'Em moderação'], function(err) {
+            if (err) {
+                return console.log(err.message);
+            }
+        });
+    });
+
+    res.render('moderacao', {layout : 'principal', post: {hashtag: nm_hashtag}});
 });
 
 //TELA DE EXIBIÇÃO DE TWEETS MODERADOS
