@@ -64,7 +64,7 @@ app.get('/moderacao', function (req, res) {
 
 //TELA DE EXIBIÇÃO DE TWEETS MODERADOS
 app.get('/exibicao', function (req, res) {
-    res.render('exibicao', {layout : 'principal', post: {hashtag: nm_hashtag}});
+    res.render('exibicao', {layout : 'principal', post: {hashtag: nm_hashtag, hashtag_url: encodeURIComponent(nm_hashtag)}});
 });
 
 //RECUPERA OS TWEETS QUE TENHAM A HASHTAG UTILIZADA E QUE ESTEJAM DENTRO DE UM DETERMINADO INTERVALO

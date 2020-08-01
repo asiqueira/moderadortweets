@@ -41,7 +41,9 @@ function carregaTweets(divDestino, intervalo) {
                 tx_retorno = tx_retorno + "</div>";
             }
 
-            document.getElementById("divSpinner").style.display = "none";
+            if(json_retorno != "")
+                document.getElementById("divSpinner").style.display = "none";
+            
             document.getElementById(divDestino).innerHTML = document.getElementById(divDestino).innerHTML + tx_retorno;
         }
     };
@@ -93,7 +95,9 @@ function carregaTweetsExibicao(divDestino, intervalo) {
                 tx_retorno = tx_retorno + "</div>";
             }
 
-            document.getElementById("divSpinner").style.display = "none";
+            if(json_retorno != "")
+                document.getElementById("divSpinner").style.display = "none";
+            
             document.getElementById(divDestino).innerHTML = document.getElementById(divDestino).innerHTML + tx_retorno;
         }
     };
