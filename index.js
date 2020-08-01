@@ -79,6 +79,28 @@ app.get('/carregaTweets', function (req, res) {
     console.log('---------- ENVIOU ----------');
 });
 
+//APROVAÇÃO DE TWEETS NO BANCO DE DADOS
+app.get('/aprovaTweet', function (req, res) {
+    id_tweet = req.query.id_tweet;
+
+    db.run("UPDATE tweets SET nm_status = 'Aprovado' WHERE id_tweet = ?", [id_tweet], function(err) {
+        if (err) {
+            return console.log(err.message);
+        }
+    });
+});
+
+//REJEIÇÃO DE TWEETS NO BANCO DE DADOS
+app.get('/rejeitaTweet', function (req, res) {
+    id_tweet = req.query.id_tweet;
+
+    db.run("UPDATE tweets SET nm_status = 'Rejeitado' WHERE id_tweet = ?", [id_tweet], function(err) {
+        if (err) {
+            return console.log(err.message);
+        }
+    });
+});
+
 app.listen(3000, function () {
     console.log('Aplicação iniciada na porta 3000.');
 });
