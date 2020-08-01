@@ -1,7 +1,23 @@
 <h4>Hashtag: {{post.hashtag}}</h4>
 <br>
-<div id="divTweets" class="container-fluid"></div>
+<div id="divTweets" class="container-fluid">
+    <div id="divSpinner">
+        <div class="spinner-grow text-dark" role="status">
+            <span class="sr-only">Carregando...</span>
+        </div>
+        <div class="spinner-grow text-dark" role="status">
+            <span class="sr-only">Carregando...</span>
+        </div>
+        <div class="spinner-grow text-dark" role="status">
+            <span class="sr-only">Carregando...</span>
+        </div>
+    </div>
+</div>
 
 <script>
-    setInterval(carregaTweets, 10000, ["divTweets"]);
+    //QUANDO ACESSAMOS A PÁGINA, CARREGAMOS OS TWEETS DAS ÚLTIMAS 2 HORAS
+    setTimeout(carregaTweets, 2000, ["divTweets"], ["-2 hours"]);
+
+    //NA SEQUÊNCIA, VAMOS ACRESCENTANDO NOVOS TWEETS A CADA 10 SEGUNDOS
+    setInterval(carregaTweets, 10000, ["divTweets"], ["-10 seconds"]);
 </script>

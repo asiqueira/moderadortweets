@@ -1,7 +1,8 @@
-//FAZ REQUEST PARA RECUPERAR OS TWEETS DO BANCO DE DADOS
-function carregaTweets(divDestino) {
+//FAZ REQUEST PARA RECUPERAR OS TWEETS COLETADOS DENTRO DE UM INTERVALO
+function carregaTweets(divDestino, intervalo) {
     console.log("---------- carregaTweets ----------");
     var tx_retorno = "";
+    var tx_style = "";
     var xhttp = new XMLHttpRequest();
 
     xhttp.onreadystatechange = function() {
@@ -9,9 +10,24 @@ function carregaTweets(divDestino) {
 
             json_retorno = JSON.parse(this.responseText);
 
+            //DEFININDO A SINALIZAÇÃO DE STATUS DOS TWEETS
             for(var i = 0; i < json_retorno.length; i++)
             {
-                tx_retorno = tx_retorno + "<div id='divTweet_" + json_retorno[i].id_tweet + "'>";
+                switch(json_retorno[i].nm_status)
+                {
+                    case "Aprovado":
+                        tx_style = "background-color: #90EE90";
+                    break;
+                    case "Rejeitado":
+                        tx_style = "background-color: #EE9090";
+                    break;
+                    default:
+                        tx_style = "";
+                    break;
+                }
+
+                //MONTANDO A ESTRUTURA DE TWEETS QUE SERÁ RETORNADA PARA O USUÁRIO
+                tx_retorno = tx_retorno + "<div id='divTweet_" + json_retorno[i].id_tweet + "' style='" + tx_style + "'>";
                 tx_retorno = tx_retorno + "<table>";
                 tx_retorno = tx_retorno + "<tr>";
                 tx_retorno = tx_retorno + "<td style='width:150px;'>" + json_retorno[i].nm_postagem + "</td>";
@@ -25,11 +41,12 @@ function carregaTweets(divDestino) {
                 tx_retorno = tx_retorno + "</div>";
             }
 
+            document.getElementById("divSpinner").style.display = "none";
             document.getElementById(divDestino).innerHTML = document.getElementById(divDestino).innerHTML + tx_retorno;
         }
     };
 
-    xhttp.open("GET", "/carregaTweets", true);
+    xhttp.open("GET", "/carregaTweets?intervalo=" + intervalo, true);
     xhttp.send();
 }
 

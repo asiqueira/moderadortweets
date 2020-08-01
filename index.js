@@ -66,17 +66,17 @@ app.get('/exibicao', function (req, res) {
     res.render('exibicao', {layout : 'principal'});
 });
 
+//RECUPERA OS TWEETS QUE TENHAM A HASHTAG UTILIZADA E QUE ESTEJAM DENTRO DE UM DETERMINADO INTERVALO
 app.get('/carregaTweets', function (req, res) {
-    //RECUPERANDO OS TWEETS QUE TENHAM A HASHTAG UTILIZADA
-    db.all("SELECT id_tweet, nm_postagem, nm_screen_name, nm_url_imagem, tx_mensagem FROM tweets WHERE UPPER(tx_mensagem) LIKE UPPER('%" + nm_hashtag + "%') AND nm_postagem > datetime('now', 'localtime', '-10 seconds')", [], (err, rows) => {
+    nm_intervalo = req.query.intervalo;
+
+    db.all("SELECT id_tweet, nm_postagem, nm_screen_name, nm_url_imagem, tx_mensagem, nm_status FROM tweets WHERE UPPER(tx_mensagem) LIKE UPPER('%" + nm_hashtag + "%') AND nm_postagem > datetime('now', 'localtime', '" + nm_intervalo + "')", [], (err, rows) => {
         if (err) {
           return console.error(err.message);
         }
 
         res.json(rows);
       });
-
-    console.log('---------- ENVIOU ----------');
 });
 
 //APROVAÇÃO DE TWEETS NO BANCO DE DADOS
