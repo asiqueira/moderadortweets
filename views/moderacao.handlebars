@@ -1,2 +1,7 @@
-Moderação
-{{post.hashtag}}
+<h4>Hashtag: {{post.hashtag}}</h4>
+<br>
+<div id="divTweets" class="container-fluid"></div>
+
+<script>
+    setInterval(carregaTweets, 10000, ["divTweets"]);
+</script>

@@ -10,8 +10,9 @@ app.set('view engine', 'handlebars');
 app.engine('handlebars', handlebars({
     layoutsDir: __dirname + '/views/layouts',
 }));
-//COMANDO PARA PERMITIR A UTILIZAÇÃO ARQUIVOS ESTÁTICOS
+//COMANDOS PARA PERMITIR A UTILIZAÇÃO ARQUIVOS ESTÁTICOS
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
+app.use('/js', express.static(__dirname + '/js'));
 
 //CONEXÃO COM O BANCO DE DADOS
 let db = new sqlite3.Database('./db/moderadortweets.db');
@@ -50,7 +51,7 @@ app.get('/moderacao', function (req, res) {
         console.log(tweet.text);
 
         //INSERINDO OS TWEETS NO BANCO DE DADOS
-        db.run(`INSERT INTO tweets(nm_screen_name, nm_url_imagem, tx_mensagem, nm_status) VALUES(?, ?, ?, ?)`, [tweet.user.screen_name, tweet.user.profile_image_url, tweet.text, 'Em moderação'], function(err) {
+        db.run("INSERT INTO tweets(nm_screen_name, nm_url_imagem, tx_mensagem, nm_status, nm_postagem) VALUES(?, ?, ?, ?, datetime('now', 'localtime'))", [tweet.user.screen_name, tweet.user.profile_image_url, tweet.text, 'Em moderação'], function(err) {
             if (err) {
                 return console.log(err.message);
             }
@@ -63,6 +64,19 @@ app.get('/moderacao', function (req, res) {
 //TELA DE EXIBIÇÃO DE TWEETS MODERADOS
 app.get('/exibicao', function (req, res) {
     res.render('exibicao', {layout : 'principal'});
+});
+
+app.get('/carregaTweets', function (req, res) {
+    //RECUPERANDO OS TWEETS QUE TENHAM A HASHTAG UTILIZADA
+    db.all("SELECT id_tweet, nm_postagem, nm_screen_name, nm_url_imagem, tx_mensagem FROM tweets WHERE UPPER(tx_mensagem) LIKE UPPER('%" + nm_hashtag + "%') AND nm_postagem > datetime('now', 'localtime', '-10 seconds')", [], (err, rows) => {
+        if (err) {
+          return console.error(err.message);
+        }
+
+        res.json(rows);
+      });
+
+    console.log('---------- ENVIOU ----------');
 });
 
 app.listen(3000, function () {
