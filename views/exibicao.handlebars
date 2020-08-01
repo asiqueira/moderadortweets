@@ -1,1 +1,25 @@
-Exibição
+<h4>Exibição</h4>
+<br>
+<h5>Hashtag: {{post.hashtag}}</h5>
+<br>
+<div id="divTweets" class="container-fluid">
+    <div id="divSpinner">
+        <div class="spinner-grow text-dark" role="status">
+            <span class="sr-only">Carregando...</span>
+        </div>
+        <div class="spinner-grow text-dark" role="status">
+            <span class="sr-only">Carregando...</span>
+        </div>
+        <div class="spinner-grow text-dark" role="status">
+            <span class="sr-only">Carregando...</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    //QUANDO ACESSAMOS A PÁGINA, CARREGAMOS OS TWEETS APROVADOS NAS ÚLTIMAS 2 HORAS
+    setTimeout(carregaTweetsExibicao, 2000, ["divTweets"], ["-2 hours"]);
+
+    //NA SEQUÊNCIA, VAMOS ACRESCENTANDO NOVOS TWEETS APROVADOS A CADA 10 SEGUNDOS
+    setInterval(carregaTweetsExibicao, 10000, ["divTweets"], ["-10 seconds"]);
+</script>
