@@ -2,6 +2,7 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const sqlite3 = require('sqlite3');
 const Twit = require('twit');
+require('dotenv').config();
 
 const app = express();
 
@@ -26,10 +27,10 @@ var stream;
 
 //LOGIN PARA UTILIZAR A API DO TWITTER
 const T = new Twit({
-    consumer_key: 'SSVLCiPYT2ndysTYNYuIiRKY3',
-    consumer_secret: 'WuK5m77757m6Aa8tdooRu7V95Gvlrq1tlrgESgmoamFsDhlUUw',
-    access_token: '183344000-FkwTQsIOxy6sTLIw4zHEwiYCipyXpbFwklwlS84i',
-    access_token_secret: 'qB0WPGNqLXB1lDzhXFyW6LNrneDMd4ZgaNyQMaYwl9p8v',
+    consumer_key: process.env.consumer_key,
+    consumer_secret: process.env.consumer_secret,
+    access_token: process.env.access_token,
+    access_token_secret: process.env.access_token_secret,
 });
 
 //HOME DA APLICAÇÃO
