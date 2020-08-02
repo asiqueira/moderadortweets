@@ -25,6 +25,12 @@ var nm_hashtag = '';
 //VARIÁVEL PARA STREAM DE DADOS DO TWITTER
 var stream;
 
+//INDICA O TWEET EM EXIBIÇÃO NO TELÃO
+var id_tweet_exibicao = 0;
+
+//INDICA SE O TWEET ESCOLHIDO DEVE SER EXIBIDO OU NÃO NO TELÃO
+var lg_tweet_exibicao = false;
+
 //LOGIN PARA UTILIZAR A API DO TWITTER
 const T = new Twit({
     consumer_key: process.env.consumer_key,
@@ -113,6 +119,45 @@ app.get('/rejeitaTweet', function (req, res) {
             return console.log(err.message);
         }
     });
+});
+
+//SIMULAÇÃO DE UM TELÃO PARA EXIBIÇÃO DOS TWEETS
+app.get('/telao', function (req, res) {
+    res.render('telao', {layout : 'principal'});
+});
+
+//EXIBE TWEET NO TELÃO
+app.get('/exibeTweet', function (req, res) {
+    id_tweet_exibicao = req.query.id_tweet;
+    lg_tweet_exibicao = true;
+    
+});
+
+//RETIRA TWEET DO TELÃO
+app.get('/retiraTweet', function (req, res) {
+    id_tweet_exibicao = 0;
+    lg_tweet_exibicao = false;
+});
+
+//CONSULTA AÇÃO QUE DEVE SER FEITA COM TWEET NO TELÃO
+app.get('/consultaTweetTelao', function (req, res) {
+    if(id_tweet_exibicao != 0)
+    {
+        //RECUPERANDO O TWEET QUE DEVERÁ SER EXIBIDO NO TELÃO
+        db.all("SELECT nm_screen_name, nm_url_imagem, tx_mensagem FROM tweets WHERE id_tweet = ?", [id_tweet_exibicao], (err, rows) => {
+            if (err) {
+              return console.error(err.message);
+            }
+            
+            id_tweet_exibicao = 0;
+
+            res.json({'tweet': rows, "lg_exibicao": lg_tweet_exibicao});
+        });
+    }
+    else
+    {
+        res.json({'tweet': [], "lg_exibicao": lg_tweet_exibicao});
+    }
 });
 
 app.listen(3000, function () {

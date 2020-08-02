@@ -143,3 +143,62 @@ function rejeitarTweet(id_tweet)
     xhttp.open("GET", "/rejeitaTweet?id_tweet=" + id_tweet, true);
     xhttp.send();
 }
+
+//AUTORIZA A EXIBIÇÃO DE UM TWEET NO TELÃO
+function exibirTweet(id_tweet)
+{
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log("Tweet em exibição");
+        }
+    };
+
+    xhttp.open("GET", "/exibeTweet?id_tweet=" + id_tweet, true);
+    xhttp.send();
+}
+
+//RETIRA O TWEET QUE ESTÁ SENDO EXIBIDO NO TELÃO
+function retirarTweet(id_tweet)
+{
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log("Tweet retirado do telão");
+        }
+    };
+
+    xhttp.open("GET", "/retiraTweet?id_tweet=" + id_tweet, true);
+    xhttp.send();
+}
+
+//CONSULTA AÇÃO QUE DEVE SER FEITA COM TWEET NO TELÃO
+function consultaTweetTelao()
+{
+    var xhttp = new XMLHttpRequest();
+
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            json_retorno = JSON.parse(this.responseText);
+
+            if(json_retorno.lg_exibicao == false)
+            {
+                //RETIRAMOS O TWEET DO TELÃO
+                document.getElementById("divTweet").innerHTML = "";
+            }
+            else
+            {
+                if(json_retorno.tweet.length > 0)
+                {
+                    //EXIBIMOS O TWEET
+                    document.getElementById("divTweet").innerHTML = "<img src='" + json_retorno.tweet[0].nm_url_imagem + "'><br>" + json_retorno.tweet[0].nm_screen_name + "<br>" + json_retorno.tweet[0].tx_mensagem;
+                }
+            }
+        }
+    };
+
+    xhttp.open("GET", "/consultaTweetTelao", true);
+    xhttp.send();
+}
